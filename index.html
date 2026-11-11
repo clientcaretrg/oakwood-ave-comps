@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>105 Oakwood Ave Market Analysis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: one narrow column. Header, subject inputs with a one-line verdict, then Sales: filters, six numbers, one chart, one table. */
+:root{
+  --brand:#295c6f; --brand-soft:#e1ece8; --bg:#ffffff; --ink:#16252b; --muted:#5f6f75; --line:#e2e8e6;
+  --bar:#00749a; --amber:#a8630f;
+  --font:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--brand:#8cc0d0;--brand-soft:#1c2b2f;--bg:#121a1d;--ink:#e4ecec;--muted:#9aaab0;--line:#26343a;--bar:#2a9cc4;--amber:#d39545;color-scheme:dark}}
+:root[data-theme="dark"]{--brand:#8cc0d0;--brand-soft:#1c2b2f;--bg:#121a1d;--ink:#e4ecec;--muted:#9aaab0;--line:#26343a;--bar:#2a9cc4;--amber:#d39545;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5}
+.wrap{max-width:1040px;margin:0 auto;padding:32px 20px 40px}
+h1{font-size:28px;font-weight:700;margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font-size:19px;font-weight:600;margin:0 0 12px}
+.lede{color:var(--muted);margin:4px 0 0}
+td,.v,.verdict{font-variant-numeric:tabular-nums}
+section{margin-top:32px}
+/* subject */
+.subject{margin-top:22px;padding:16px 18px;border-radius:10px;background:var(--brand-soft)}
+.inputs{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.inputs .f{display:flex;flex-direction:column;gap:2px}
+.inputs label{font-size:12px;color:var(--muted)}
+.inputs input{font:inherit;font-size:15px;width:84px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+.inputs .price input{width:130px}
+.inputs .who{font-weight:600;align-self:center;margin-right:6px}
+.verdict{margin:12px 0 0;font-size:16px}
+.verdict b{font-weight:600}
+.reset{font:inherit;font-size:13px;background:none;border:none;color:var(--brand);text-decoration:underline;cursor:pointer;padding:6px 0}
+/* filters */
+.filters{display:flex;flex-wrap:wrap;gap:6px 18px;margin-bottom:16px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;font-size:13px;padding:5px 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--bg)}
+.chip:focus-visible,input:focus-visible,.reset:focus-visible{outline:2px solid var(--bar);outline-offset:2px}
+/* metrics */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.m{padding:14px 12px 12px 0}
+.m .k{font-size:12.5px;color:var(--muted)}
+.m .v{font-size:24px;font-weight:600;line-height:1.2;margin-top:2px}
+.m .s{font-size:12.5px;color:var(--muted)}
+/* chart */
+.chart{margin-top:22px}
+.chart .cap{font-size:13px;color:var(--muted);margin:0 0 6px}
+svg text{fill:var(--muted);font-family:var(--font);font-size:11.5px}
+svg .grid{stroke:var(--line)}
+svg .halo{paint-order:stroke;stroke:var(--bg);stroke-width:4px;stroke-linejoin:round}
+svg .bar{fill:var(--bar)}
+svg .bar.off{fill-opacity:.25}
+svg .hit{fill:transparent;cursor:pointer}
+svg .hit:hover + .hl{opacity:1}
+/* table */
+.tbl{overflow-x:auto;margin-top:22px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:8px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;user-select:none}
+th:first-child,td:first-child,th.l,td.l{text-align:left}
+th .arr{font-size:9px;margin-left:3px}
+tr.off td:not(:first-child){opacity:.4}
+tr.flash td{background:var(--brand-soft)}
+td.more{color:var(--bar);font-weight:600}
+td.less{color:var(--amber);font-weight:600}
+input[type=checkbox]{width:16px;height:16px;accent-color:var(--brand);cursor:pointer;vertical-align:-3px}
+.st{font-size:12px;color:var(--muted)}
+.key{font-size:12.5px;color:var(--muted);margin-top:8px}
+.key i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin:0 4px 0 10px}
+.key i:first-child{margin-left:0}
+.bs{font-size:10.5px;color:var(--muted);margin-left:3px}
+footer{margin-top:28px;font-size:12.5px;color:var(--muted);max-width:80ch}
+.tip{position:fixed;pointer-events:none;z-index:9;background:var(--ink);color:var(--bg);font-size:12.5px;padding:7px 9px;border-radius:6px;opacity:0;max-width:240px;line-height:1.4}
+.tip b{display:block}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>105 Oakwood Ave market analysis</h1>
+  <p class="lede">Revere single-family sales closed May to November 2026, plus current pending and active listings.</p>
+
+  <div class="subject" id="subject">
+    <div class="inputs">
+      <span class="who">105 Oakwood Ave</span>
+      <div class="f"><label for="s-beds">Beds</label><input id="s-beds" type="number" min="1" step="1"></div>
+      <div class="f"><label for="s-baths">Baths</label><input id="s-baths" type="number" min="1" step="0.5"></div>
+      <div class="f"><label for="s-sqft">Sq ft</label><input id="s-sqft" type="number" min="300" step="10"></div>
+      <div class="f price"><label for="s-price">Asking price</label><input id="s-price" type="number" min="100000" step="5000"></div>
+      <button class="reset" type="button" id="reset">Reset</button>
+    </div>
+    <p class="verdict" id="verdict"></p>
+  </div>
+
+  <section id="sales">
+    <h2>Sales</h2>
+    <div class="filters">
+      <div class="chips" id="f-beds" role="group" aria-label="Bedrooms"></div>
+      <div class="chips" id="f-size" role="group" aria-label="Size"></div>
+    </div>
+    <div class="metrics" id="metrics"></div>
+    <div class="chart" id="chart"><p class="cap">Sold prices, low to high. Dashed line: Oakwood's asking price. Click a bar to find the sale in the table.</p><div id="svg"></div></div>
+    <div class="tbl"><table id="table"><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+    <p class="key">Beds, baths and sq ft in <b style="color:var(--bar)">teal</b> are more than Oakwood; <b style="color:var(--amber)">amber</b> are less. Uncheck a row to leave it out of the numbers.</p>
+  </section>
+
+  <footer>Source: MLS PIN listings for Revere single-family homes, data through November 10, 2026. "bsmt" marks square footage that includes a finished basement. Information deemed reliable but not guaranteed. Prepared by The Rasner Group.</footer>
+</div>
+<div class="tip" id="tip"></div>
+
+<script>
+const ALL = [{"id": "73582194", "addr": "126 Fenley Street", "status": "Sold", "type": "SF detached", "style": "Ranch", "beds": 3, "fb": 1, "hb": 0, "baths": 1.0, "sqftMls": 1800, "above": 1200, "below": 600, "inclBase": true, "orig": 545000, "list": 545000, "sold": 640000, "dom": 7, "dto": 7, "listDate": "09/24/2026", "offerDate": "10/01/2026", "closeDate": "11/09/2026", "conc": null, "year": 1955}, {"id": "73535547", "addr": "745 Park Ave", "status": "Sold", "type": "SF detached", "style": "Bungalow", "beds": 3, "fb": 1, "hb": 1, "baths": 1.5, "sqftMls": 1152, "above": 1152, "below": 0, "inclBase": false, "orig": 549000, "list": 549000, "sold": 550000, "dom": 37, "dto": 22, "listDate": "06/13/2026", "offerDate": "07/05/2026", "closeDate": "08/03/2026", "conc": null, "year": 1930}, {"id": "73524559", "addr": "438 Proctor Ave", "status": "Sold", "type": "SF detached", "style": "Cape", "beds": 2, "fb": 1, "hb": 0, "baths": 1.0, "sqftMls": 972, "above": 972, "below": 0, "inclBase": false, "orig": 549000, "list": 549000, "sold": 565000, "dom": 21, "dto": 6, "listDate": "05/27/2026", "offerDate": "06/02/2026", "closeDate": "08/03/2026", "conc": null, "year": 1951}, {"id": "73537833", "addr": "32 Fenley St", "status": "Sold", "type": "SF detached", "style": "Ranch", "beds": 3, "fb": 2, "hb": 0, "baths": 2.0, "sqftMls": 1436, "above": 680, "below": 756, "inclBase": true, "orig": 569974, "list": 569974, "sold": 570000, "dom": 34, "dto": 14, "listDate": "06/17/2026", "offerDate": "07/01/2026", "closeDate": "07/30/2026", "conc": null, "year": 1960}, {"id": "73546747", "addr": "105 Oakwood Ave", "status": "Active", "type": "SF detached", "style": "Raised Ranch", "beds": 2, "fb": 2, "hb": 0, "baths": 2.0, "sqftMls": 1404, "above": 1404, "below": 0, "inclBase": false, "orig": 565000, "list": 575000, "sold": null, "dom": 65, "dto": null, "listDate": "07/08/2026", "offerDate": "", "closeDate": "", "conc": null, "year": 1962}, {"id": "73509108", "addr": "368 Park Avenue", "status": "Sold", "type": "SF detached", "style": "Ranch", "beds": 2, "fb": 1, "hb": 0, "baths": 1.0, "sqftMls": 1053, "above": 1053, "below": 0, "inclBase": false, "orig": 579900, "list": 579900, "sold": 600000, "dom": 22, "dto": 8, "listDate": "04/29/2026", "offerDate": "05/07/2026", "closeDate": "06/10/2026", "conc": null, "year": 1950}, {"id": "73574412", "addr": "331 Vane Street", "status": "Pending", "type": "SF detached", "style": "Colonial", "beds": 3, "fb": 1, "hb": 1, "baths": 1.5, "sqftMls": 1614, "above": 1244, "below": 370, "inclBase": true, "orig": 589000, "list": 589000, "sold": null, "dom": 42, "dto": 26, "listDate": "09/09/2026", "offerDate": "10/05/2026", "closeDate": "", "conc": null, "year": 1960}, {"id": "73557587", "addr": "130 Dale St", "status": "Sold", "type": "SF detached", "style": "Other (See Remarks)", "beds": 3, "fb": 2, "hb": 0, "baths": 2.0, "sqftMls": 1521, "above": 1521, "below": 0, "inclBase": false, "orig": 599000, "list": 599000, "sold": 610000, "dom": 7, "dto": 7, "listDate": "07/31/2026", "offerDate": "08/07/2026", "closeDate": "09/08/2026", "conc": null, "year": 1920}, {"id": "73558724", "addr": "514 Proctor Ave", "status": "Sold", "type": "SF detached", "style": "Cape", "beds": 2, "fb": 2, "hb": 0, "baths": 2.0, "sqftMls": 1249, "above": 1249, "below": 0, "inclBase": false, "orig": 599999, "list": 599999, "sold": 500000, "dom": 28, "dto": 13, "listDate": "08/04/2026", "offerDate": "08/17/2026", "closeDate": "09/21/2026", "conc": null, "year": 1930}, {"id": "73578959", "addr": "381 Mountain", "status": "Sold", "type": "SF detached", "style": "Ranch", "beds": 3, "fb": 1, "hb": 0, "baths": 1.0, "sqftMls": 1290, "above": 1290, "below": 0, "inclBase": false, "orig": 600000, "list": 600000, "sold": 580000, "dom": 7, "dto": 7, "listDate": "09/10/2026", "offerDate": "09/17/2026", "closeDate": "09/17/2026", "conc": null, "year": 2000}, {"id": "73597968", "addr": "14 Newbury St", "status": "Active", "type": "SF detached", "style": "Bungalow", "beds": 2, "fb": 2, "hb": 0, "baths": 2.0, "sqftMls": 1968, "above": 1833, "below": 135, "inclBase": true, "orig": 625000, "list": 625000, "sold": null, "dom": 9, "dto": null, "listDate": "11/02/2026", "offerDate": "", "closeDate": "", "conc": null, "year": 1880}, {"id": "73590501", "addr": "31 Furness Street", "status": "Pending", "type": "SF detached", "style": "Cape", "beds": 3, "fb": 1, "hb": 1, "baths": 1.5, "sqftMls": 1979, "above": 1131, "below": 848, "inclBase": true, "orig": 629900, "list": 629900, "sold": null, "dom": 21, "dto": 5, "listDate": "10/14/2026", "offerDate": "10/19/2026", "closeDate": "", "conc": null, "year": 1960}, {"id": "73583615", "addr": "45 Sigourney St", "status": "Sold", "type": "SF detached", "style": "Ranch", "beds": 3, "fb": 2, "hb": 0, "baths": 2.0, "sqftMls": 1989, "above": 1159, "below": 830, "inclBase": true, "orig": 629900, "list": 629900, "sold": 660000, "dom": 17, "dto": 7, "listDate": "09/29/2026", "offerDate": "10/06/2026", "closeDate": "11/10/2026", "conc": null, "year": 1956}, {"id": "73505832", "addr": "299 Lincoln St", "status": "Sold", "type": "SF attached", "style": "Other (See Remarks)", "beds": 2, "fb": 2, "hb": 1, "baths": 2.5, "sqftMls": 1428, "above": 1232, "below": 196, "inclBase": true, "orig": 647000, "list": 647000, "sold": 651000, "dom": 7, "dto": 6, "listDate": "04/22/2026", "offerDate": "04/28/2026", "closeDate": "05/29/2026", "conc": null, "year": 1987}, {"id": "73556582", "addr": "43 Warren St", "status": "Sold", "type": "SF detached", "style": "Colonial", "beds": 3, "fb": 2, "hb": 1, "baths": 2.5, "sqftMls": 1122, "above": 1122, "below": 730, "inclBase": false, "orig": 649000, "list": 649000, "sold": 659000, "dom": 27, "dto": 10, "listDate": "07/29/2026", "offerDate": "08/08/2026", "closeDate": "09/21/2026", "conc": 10000, "year": 1920}, {"id": "73540512", "addr": "460 Malden, Unit B", "status": "Sold", "type": "SF attached", "style": "Multi-Level", "beds": 3, "fb": 2, "hb": 0, "baths": 2.0, "sqftMls": 2140, "above": 1471, "below": 669, "inclBase": true, "orig": 649000, "list": 649000, "sold": 655000, "dom": 12, "dto": 1, "listDate": "07/10/2026", "offerDate": "07/11/2026", "closeDate": "08/20/2026", "conc": null, "year": 1987}, {"id": "73598615", "addr": "275 Fenno St", "status": "Active", "type": "SF attached", "style": "Colonial, Multi-Level", "beds": 2, "fb": 1, "hb": 1, "baths": 1.5, "sqftMls": 1670, "above": 1670, "below": 357, "inclBase": false, "orig": 659721, "list": 659721, "sold": null, "dom": 7, "dto": null, "listDate": "11/04/2026", "offerDate": "", "closeDate": "", "conc": null, "year": 1989}, {"id": "73561627", "addr": "176 Reservoir Ave", "status": "Sold", "type": "SF detached", "style": "Cape", "beds": 3, "fb": 1, "hb": 0, "baths": 1.0, "sqftMls": 2203, "above": 2203, "below": 0, "inclBase": false, "orig": 720000, "list": 699000, "sold": 650000, "dom": 36, "dto": 36, "listDate": "08/10/2026", "offerDate": "09/15/2026", "closeDate": "10/22/2026", "conc": null, "year": 1955}, {"id": "73578634", "addr": "38 Amelia Pl", "status": "Active", "type": "SF detached", "style": "Raised Ranch", "beds": 3, "fb": 2, "hb": 0, "baths": 2.0, "sqftMls": 2386, "above": 2386, "below": 0, "inclBase": false, "orig": 749900, "list": 699900, "sold": null, "dom": 36, "dto": null, "listDate": "09/16/2026", "offerDate": "", "closeDate": "", "conc": null, "year": 1964}, {"id": "73505707", "addr": "194 Reservoir Avenue", "status": "Sold", "type": "SF detached", "style": "Cape", "beds": 3, "fb": 1, "hb": 1, "baths": 1.5, "sqftMls": 1675, "above": 1675, "below": 0, "inclBase": false, "orig": 699900, "list": 699900, "sold": 705000, "dom": 16, "dto": 1, "listDate": "04/22/2026", "offerDate": "04/23/2026", "closeDate": "07/02/2026", "conc": null, "year": 1933}, {"id": "73513791", "addr": "39 Howard St", "status": "Sold", "type": "SF detached", "style": "Colonial", "beds": 3, "fb": 1, "hb": 1, "baths": 1.5, "sqftMls": 1284, "above": 1284, "below": 0, "inclBase": false, "orig": 729999, "list": 714999, "sold": 705000, "dom": 35, "dto": 12, "listDate": "05/06/2026", "offerDate": "05/18/2026", "closeDate": "06/30/2026", "conc": null, "year": 1900}, {"id": "73546475", "addr": "270 Vane Street", "status": "Sold", "type": "SF attached", "style": "Cape", "beds": 3, "fb": 2, "hb": 1, "baths": 2.5, "sqftMls": 1948, "above": 1398, "below": 550, "inclBase": true, "orig": 719999, "list": 719999, "sold": 740000, "dom": 29, "dto": 6, "listDate": "07/08/2026", "offerDate": "07/14/2026", "closeDate": "09/23/2026", "conc": null, "year": 1955}, {"id": "73513345", "addr": "27 Pemberton Street", "status": "Sold", "type": "SF detached", "style": "Ranch", "beds": 3, "fb": 2, "hb": 1, "baths": 2.5, "sqftMls": 1845, "above": 1845, "below": 0, "inclBase": false, "orig": 724998, "list": 724998, "sold": 750000, "dom": 25, "dto": 6, "listDate": "05/06/2026", "offerDate": "05/12/2026", "closeDate": "07/16/2026", "conc": null, "year": 1965}, {"id": "73554258", "addr": "35 Roland Road", "status": "Active", "type": "SF detached", "style": "Ranch", "beds": 3, "fb": 1, "hb": 1, "baths": 1.5, "sqftMls": 2242, "above": 1248, "below": 994, "inclBase": true, "orig": 789999, "list": 749900, "sold": null, "dom": 92, "dto": null, "listDate": "08/05/2026", "offerDate": "", "closeDate": "", "conc": null, "year": 1956}, {"id": "73491909", "addr": "65 Gore Road", "status": "Sold", "type": "SF detached", "style": "Cape", "beds": 3, "fb": 2, "hb": 1, "baths": 2.5, "sqftMls": 1499, "above": 1499, "below": 0, "inclBase": false, "orig": 799000, "list": 749900, "sold": 730000, "dom": 49, "dto": 33, "listDate": "03/25/2026", "offerDate": "04/27/2026", "closeDate": "06/26/2026", "conc": null, "year": 1954}, {"id": "73506101", "addr": "26 Newhall St", "status": "Sold", "type": "SF detached", "style": "Ranch", "beds": 3, "fb": 1, "hb": 0, "baths": 1.0, "sqftMls": 2679, "above": 1679, "below": 1000, "inclBase": true, "orig": 750000, "list": 750000, "sold": 705000, "dom": 14, "dto": 14, "listDate": "04/22/2026", "offerDate": "05/06/2026", "closeDate": "07/02/2026", "conc": 5000, "year": 1959}, {"id": "73492959", "addr": "33 Jarvis", "status": "Sold", "type": "SF detached", "style": "Cape", "beds": 3, "fb": 2, "hb": 0, "baths": 2.0, "sqftMls": 1782, "above": 1782, "below": 0, "inclBase": false, "orig": 765000, "list": 765000, "sold": 780000, "dom": 26, "dto": 11, "listDate": "03/27/2026", "offerDate": "04/07/2026", "closeDate": "05/22/2026", "conc": null, "year": 1911}, {"id": "73453914", "addr": "77 Roland Rd", "status": "Sold", "type": "SF detached", "style": "Ranch", "beds": 3, "fb": 1, "hb": 0, "baths": 1.0, "sqftMls": 2148, "above": 2148, "below": 958, "inclBase": false, "orig": 775000, "list": 775000, "sold": 750000, "dom": 175, "dto": 175, "listDate": "11/12/2025", "offerDate": "05/06/2026", "closeDate": "05/29/2026", "conc": 15000, "year": 1957}, {"id": "73596546", "addr": "278 Park Ave", "status": "Active", "type": "SF detached", "style": "Dutch Colonial", "beds": 3, "fb": 2, "hb": 0, "baths": 2.0, "sqftMls": 1778, "above": 1778, "below": 0, "inclBase": false, "orig": 799000, "list": 799000, "sold": null, "dom": 13, "dto": null, "listDate": "10/29/2026", "offerDate": "", "closeDate": "", "conc": null, "year": 1920}, {"id": "73487007", "addr": "50 Stevens St", "status": "Sold", "type": "SF detached", "style": "Ranch, Multi-Level", "beds": 3, "fb": 2, "hb": 0, "baths": 2.0, "sqftMls": 2597, "above": 2597, "below": 0, "inclBase": false, "orig": 839900, "list": 814900, "sold": 817000, "dom": 26, "dto": 23, "listDate": "03/16/2026", "offerDate": "04/08/2026", "closeDate": "05/28/2026", "conc": null, "year": 1955}, {"id": "73588705", "addr": "33 Cushman Terrace", "status": "Pending", "type": "SF detached", "style": "Raised Ranch", "beds": 3, "fb": 2, "hb": 1, "baths": 2.5, "sqftMls": 2633, "above": 2633, "below": 0, "inclBase": false, "orig": 899000, "list": 899000, "sold": null, "dom": 5, "dto": 5, "listDate": "10/08/2026", "offerDate": "10/13/2026", "closeDate": "", "conc": null, "year": 1971}];
+const SUBJ = ALL.find(p => p.id === '73546747');
+const RAW = ALL.filter(p => p !== SUBJ);
+RAW.forEach(p => { if (p.sold) p.sl = p.sold / p.list; });
+const KEY = 'trg-oakwood-simple-v2';
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => n == null ? '–' : '$' + Math.round(n).toLocaleString('en-US');
+const k = n => '$' + Math.round(n/1000) + 'K';
+const pct = n => n == null ? '–' : (n*100).toFixed(1) + '%';
+const mean = a => a.length ? a.reduce((s,x)=>s+x,0)/a.length : null;
+const median = a => { if(!a.length) return null; const s=[...a].sort((x,y)=>x-y), m=s.length>>1; return s.length%2 ? s[m] : (s[m-1]+s[m])/2; };
+const ba = b => b % 1 ? b.toFixed(1) : String(b);
+
+const defaults = () => ({ sub:{beds:SUBJ.beds, baths:SUBJ.baths, sqft:SUBJ.sqftMls, price:SUBJ.list}, beds:'all', size:'all', off:[], sort:['sold',-1] });
+let st = defaults();
+try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.sub) st = Object.assign(defaults(), s); } catch(e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e) {} };
+
+/* inputs */
+const IN = {beds:'s-beds', baths:'s-baths', sqft:'s-sqft', price:'s-price'};
+Object.entries(IN).forEach(([f,id]) => $(id).addEventListener('input', e => { const v = parseFloat(e.target.value); if (v > 0) { st.sub[f] = v; render(); } }));
+$('reset').addEventListener('click', () => { st = defaults(); render(); });
+
+function chips(el, key, opts){
+  el.innerHTML = opts.map(([v,l]) => `<button type="button" class="chip" aria-pressed="${st[key]===v}" data-v="${v}">${l}</button>`).join('');
+  el.onclick = e => { const b = e.target.closest('.chip'); if (b) { st[key] = b.dataset.v; render(); } };
+}
+
+const inFilter = p => (st.beds === 'all' || p.beds === +st.beds) && (st.size === 'all' || Math.abs(p.sqftMls - st.sub.sqft) / st.sub.sqft <= 0.2);
+
+function render(){
+  save();
+  Object.entries(IN).forEach(([f,id]) => { if (document.activeElement !== $(id)) $(id).value = st.sub[f]; });
+  chips($('f-beds'), 'beds', [['all','All beds'],['2','2 BR'],['3','3 BR']]);
+  chips($('f-size'), 'size', [['all','All sizes'],['near','Within 20% of Oakwood\'s size']]);
+
+  const shown = RAW.filter(inFilter);
+  const used = shown.filter(p => !st.off.includes(p.id));
+  const sold = used.filter(p => p.status === 'Sold');
+  const sp = sold.map(p=>p.sold), price = st.sub.price;
+  const med = median(sp), medSL = median(sold.map(p=>p.sl));
+
+  // verdict
+  if (sold.length) {
+    const d = (price - med) / med, below = sp.filter(v => v < price).length;
+    const rel = Math.abs(d) < .005 ? 'in line with' : `<b>${(Math.abs(d)*100).toFixed(1)}% ${d>0?'above':'below'}</b>`;
+    $('verdict').innerHTML = `At <b>${money(price)}</b>, Oakwood is ${rel} the median sale of ${money(med)} and priced above ${below} of ${sold.length} sales. At the median sale-to-list ratio it would sell for about <b>${money(price*medSL)}</b>.`;
+  } else $('verdict').textContent = 'No closed sales match these filters.';
+
+  // metrics
+  const m = (key, v, s) => `<div class="m"><div class="k">${key}</div><div class="v">${v}</div><div class="s">${s}</div></div>`;
+  const cnt = s => used.filter(p => p.status === s).length;
+  $('metrics').innerHTML = sold.length ? [
+    m('Sales', sold.length, `${cnt('Pending')} pending · ${cnt('Active')} active`),
+    m('Median sale price', money(med), `Average ${money(mean(sp))}`),
+    m('Median days on market', Math.round(median(sold.map(p=>p.dom))), `Average ${Math.round(mean(sold.map(p=>p.dom)))}`),
+    m('Median days to offer', Math.round(median(sold.map(p=>p.dto))), `Average ${Math.round(mean(sold.map(p=>p.dto)))}`),
+    m('Avg sale to list', pct(mean(sold.map(p=>p.sl))), `Median ${pct(medSL)}`),
+  ].join('') : m('Sales', 0, 'Adjust the filters');
+
+  drawChart(sold, price, med);
+  drawTable(shown);
+}
+
+function drawChart(sold, price, med){
+  const el = $('svg');
+  if (!sold.length) { el.innerHTML = ''; return; }
+  const rows = [...sold].sort((a,b)=>a.sold-b.sold);
+  const W = Math.max(280, el.clientWidth), H = 220, L = 50, R = 8, T = 14, B = 10;
+  const lo = Math.min(...rows.map(p=>p.sold), price) * 0.9, hi = Math.max(...rows.map(p=>p.sold), price) * 1.03;
+  const y = v => T + (hi - v) / (hi - lo) * (H - T - B);
+  const bw = (W - L - R) / rows.length;
+  const step = (hi - lo) > 300000 ? 100000 : 50000;
+  let g = '';
+  for (let t = Math.ceil(lo/step)*step; t <= hi; t += step) g += `<line class="grid" x1="${L}" x2="${W-R}" y1="${y(t)}" y2="${y(t)}"/><text x="${L-6}" y="${y(t)+4}" text-anchor="end">${k(t)}</text>`;
+  rows.forEach((p,i) => {
+    const x = L + i*bw + Math.min(2, bw*.15), w = Math.max(2, bw - Math.min(4, bw*.3));
+    const tip = `<b>${esc(p.addr)}</b>${p.beds} bd · ${ba(p.baths)} ba · ${p.sqftMls.toLocaleString('en-US')} sq ft<br>Sold ${money(p.sold)} (${pct(p.sl)} of list)<br>${p.dom} days on market`;
+    g += `<rect class="bar" x="${x}" y="${y(p.sold)}" width="${w}" height="${H-B-y(p.sold)}" rx="3"/>`;
+    g += `<rect class="hit" x="${L+i*bw}" y="${T}" width="${bw}" height="${H-T-B}" data-id="${p.id}" data-tip="${esc(tip)}"/>`;
+  });
+  const py = y(price), my = y(med);
+  g += `<line x1="${L}" x2="${W-R}" y1="${my}" y2="${my}" stroke="var(--muted)" stroke-width="1"/><text class="halo" x="${L+6}" y="${my-5}">Median sale ${k(med)}</text>`;
+  g += `<line x1="${L}" x2="${W-R}" y1="${py}" y2="${py}" stroke="var(--ink)" stroke-width="2" stroke-dasharray="6 4"/><text class="halo" x="${L+6}" y="${py-6}" style="fill:var(--ink);font-weight:600">Oakwood ${k(price)}</text>`;
+  el.innerHTML = `<svg width="${W}" height="${H}" role="img" aria-label="Sold prices compared with Oakwood's asking price">${g}</svg>`;
+}
+
+const COLS = [
+  ['use','',null], ['addr','Address',p=>p.addr], ['status','Status',p=>p.status],
+  ['beds','Beds',p=>p.beds], ['baths','Baths',p=>p.baths], ['sqft','Sq ft',p=>p.sqftMls],
+  ['list','List price',p=>p.list], ['sold','Sale price',p=>p.sold ?? -1], ['sl','SP/LP %',p=>p.sl ?? 0],
+  ['dom','DOM',p=>p.dom], ['dto','Days to offer',p=>p.dto ?? 999]
+];
+function drawTable(shown){
+  const [sk, sd] = st.sort, col = COLS.find(c => c[0] === sk);
+  $('thead').innerHTML = '<tr>' + COLS.map(([key,label,fn]) => `<th class="${['addr','status'].includes(key)?'l':''}" data-k="${fn?key:''}" ${fn?`aria-sort="${sk===key?(sd>0?'ascending':'descending'):'none'}"`:''}>${label}${sk===key?`<span class="arr">${sd>0?'▲':'▼'}</span>`:''}</th>`).join('') + '</tr>';
+  const rows = [...shown].sort((a,b) => { const x = col[2](a), y = col[2](b); return (x>y?1:x<y?-1:0) * sd; });
+  const s = st.sub, cmp = (v, ref, tol=0) => v - ref > tol ? 'more' : ref - v > tol ? 'less' : '';
+  $('tbody').innerHTML = rows.map(p => `<tr id="r-${p.id}" class="${st.off.includes(p.id)?'off':''}">
+    <td><input type="checkbox" data-id="${p.id}" ${st.off.includes(p.id)?'':'checked'} aria-label="Include ${esc(p.addr)}"></td>
+    <td class="l">${esc(p.addr)}</td><td class="l st">${p.status}</td>
+    <td class="${cmp(p.beds, s.beds)}">${p.beds}</td>
+    <td class="${cmp(p.baths, s.baths)}">${ba(p.baths)}</td>
+    <td class="${cmp(p.sqftMls, s.sqft, s.sqft*0.1)}">${p.sqftMls.toLocaleString('en-US')}${p.inclBase?'<span class="bs">bsmt</span>':''}</td>
+    <td>${money(p.list)}</td><td>${p.sold ? money(p.sold) : '–'}</td><td>${pct(p.sl)}</td>
+    <td>${p.dom}</td><td>${p.dto ?? '–'}</td></tr>`).join('');
+}
+$('thead').addEventListener('click', e => { const th = e.target.closest('th'); const key = th && th.dataset.k; if (!key) return;
+  st.sort = st.sort[0] === key ? [key, -st.sort[1]] : [key, ['addr','status'].includes(key) ? 1 : -1]; render(); });
+$('tbody').addEventListener('change', e => { const id = e.target.dataset.id; if (!id) return;
+  st.off = e.target.checked ? st.off.filter(x => x !== id) : [...st.off, id]; render(); const cb = document.querySelector(`input[data-id="${id}"]`); if (cb) cb.focus(); });
+
+/* tooltip + click to row */
+const tip = $('tip');
+document.addEventListener('pointermove', e => {
+  const t = e.target.closest && e.target.closest('[data-tip]');
+  if (!t) { tip.style.opacity = 0; return; }
+  tip.innerHTML = t.getAttribute('data-tip');
+  const r = tip.getBoundingClientRect(); let x = e.clientX + 12, yy = e.clientY + 12;
+  if (x + r.width > innerWidth - 8) x = e.clientX - r.width - 12;
+  if (yy + r.height > innerHeight - 8) yy = e.clientY - r.height - 12;
+  tip.style.left = x + 'px'; tip.style.top = yy + 'px'; tip.style.opacity = 1;
+});
+$('svg').addEventListener('click', e => { const t = e.target.closest('[data-id]'); if (!t) return;
+  const row = $('r-' + t.dataset.id); if (!row) return; row.scrollIntoView({block:'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
+  row.classList.add('flash'); setTimeout(() => row.classList.remove('flash'), 1400); });
+addEventListener('scroll', () => tip.style.opacity = 0, {passive:true});
+let lastW = 0;
+new ResizeObserver(() => { const w = $('svg').clientWidth; if (w !== lastW) { lastW = w; render(); } }).observe($('chart'));
+render();
+</script>
+</body>
+</html>
